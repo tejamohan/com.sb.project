@@ -1,0 +1,52 @@
+server:
+  port: 7979
+spring:
+  datasource:
+    password: root
+    url: jdbc:mysql://localhost:3306/mydb
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        generate_statistics: true
+    show-sql: true
+  application:
+    name: ITEM-SERVICE
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url: 
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+      
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+  
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        registerHealthIndicator: true # Enable/disable registering CircuitBreaker health indicators
+        eventConsumerBufferSize: 10
+        slidingWindowSize: 10 # Number of calls which are needed to calculate the error rate
+        minimumNumberOfCalls: 5 # Minimum number of calls which are required (per sliding window period) before the CircuitBreaker can calculate the error rate
+        permittedNumberOfCallsInHalfOpenState: 3 # Number of permitted calls in the half open state
+        waitDurationInOpenState: 5000 # The time that the CircuitBreaker should wait before transitioning from OPEN to HALF_OPEN state
+        failureRateThreshold: 50 # Threshold of the error rate in percentage (values from 0 to 100)
+        automaticTransitionFromOpenToHalfOpenEnabled: true # Enable/disable automatic transitioning from OPEN to HALF_OPEN state after waitDurationInOpenState
+        slidingWindowType: COUNT_BASED # Threshold duration (in milliseconds) above which calls are considered as slow
