@@ -21,12 +21,14 @@ public class EmployeeController {
 	    @GetMapping("/insert-employees")
 	    public String insertEmployees() {
 	        employeeService.insertEmployees();
+	        System.out.println("Inserted 10000 employee");
 	        return "10,000 Employees Inserted Successfully!";
 	    }
 	    
 	    @GetMapping("/getEmpAll/{salary}")
 	    public ResponseEntity<List<EmployeesNewLakhData>> getAllEmpData(@PathVariable double salary){
 	    	List<EmployeesNewLakhData> getResult=employeeService.getAllEmp(salary);
+	    	System.out.println(getResult);
 			return new ResponseEntity<List<EmployeesNewLakhData>>(getResult,HttpStatus.OK);
 	    	
 	    }
